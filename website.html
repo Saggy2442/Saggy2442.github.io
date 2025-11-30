@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Sagar Palhade — Cybersecurity enthusiast and Full Stack developer.">
+    <title>Sagar Palhade | Cybersecurity & Web Dev</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Fonts: Inter for main text, JetBrains Mono for code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0B1120',      /* Deep slate/navy */
+                            card: '#162032',    /* Slightly lighter */
+                            surface: '#1E293B',
+                        },
+                        accent: {
+                            primary: '#0ea5e9',   /* Sky Blue */
+                            secondary: '#10b981', /* Emerald Green */
+                            glow: 'rgba(14, 165, 233, 0.5)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B1120;
+            color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Focus Styles */
+        :focus-visible {
+            outline: 2px solid #0ea5e9;
+            outline-offset: 2px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 5px;
+            border: 2px solid #0B1120;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #0ea5e9, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glitch Effect (Kept for Cyber touch) */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch {
+            position: relative;
+            color: #fff;
+            font-weight: 800;
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #0ea5e9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #10b981;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(38px, 9999px, 86px, 0); }
+            20% { clip: rect(12px, 9999px, 95px, 0); }
+            40% { clip: rect(61px, 9999px, 20px, 0); }
+            60% { clip: rect(84px, 9999px, 53px, 0); }
+            80% { clip: rect(21px, 9999px, 64px, 0); }
+            100% { clip: rect(7px, 9999px, 29px, 0); }
+        }
+
+        /* Canvas Background */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Card Hover Effects */
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(14, 165, 233, 0.15);
+        }
+
+        /* Timeline Line */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 19px; /* Adjust based on dot size */
+            width: 2px;
+            background: linear-gradient(to bottom, #0ea5e9, #10b981, rgba(16, 185, 129, 0));
+        }
+
+        /* Back to top */
+        #back-to-top {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent-primary selection:text-white">
+
+    <!-- Background Animation -->
+    <canvas id="network-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center group cursor-pointer">
+                    <!-- Logo Icon -->
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-xl mr-3 group-hover:rotate-12 transition-transform">
+                        SP
+                    </div>
+                    <span class="text-white text-lg font-bold tracking-tight group-hover:text-accent-primary transition-colors">Sagar Palhade</span>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:block">
+                    <div class="flex items-baseline space-x-1">
+                        <a href="#home" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Home</a>
+                        <a href="#about" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">About</a>
+                        <a href="#skills" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Skills</a>
+                        <a href="#experience" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Experience</a>
+                        <a href="#projects" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Projects</a>
+                        <a href="resume.html" target="_blank" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center">
+                            Resume
+                            <i class="fas fa-external-link-alt text-xs ml-1.5 opacity-60"></i>
+                        </a>
+                        <a href="#contact" class="ml-4 px-5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full text-sm font-medium transition-all border border-white/10">Contact</a>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white p-2 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-bg border-b border-gray-800">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#home" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800">Home</a>
+                <a href="#about" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800">About</a>
+                <a href="#skills" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800">Skills</a>
+                <a href="#experience" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800">Experience</a>
+                <a href="#projects" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800">Projects</a>
+                <a href="resume.html" target="_blank" class="text-gray-300 hover:text-accent-primary block py-2 text-base font-medium border-b border-gray-800 flex items-center">
+                    Resume
+                    <i class="fas fa-external-link-alt text-xs ml-2 opacity-60"></i>
+                </a>
+                <a href="#contact" class="text-accent-primary block py-2 text-base font-medium font-bold mt-4">Contact Me →</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="min-h-screen flex items-center justify-center relative pt-20 px-4">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="text-left z-10">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full border border-accent-secondary/30 bg-accent-secondary/10 text-accent-secondary text-xs font-mono mb-6">
+                        <span class="w-2 h-2 rounded-full bg-accent-secondary animate-pulse mr-2"></span>
+                        System Online
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white tracking-tight leading-tight">
+                        Hi, I'm <br>
+                        <span class="glitch-wrapper">
+                            <span class="glitch text-transparent bg-clip-text bg-gradient-to-r from-accent-primary to-accent-secondary" data-text="SAGAR PALHADE">SAGAR PALHADE</span>
+                        </span>
+                    </h1>
+                    
+                    <h2 class="text-xl md:text-2xl text-gray-400 mb-8 h-8 font-light flex items-center">
+                        I build <span id="typing-text" class="text-white font-medium ml-2 border-r-2 border-accent-primary pr-1"></span>
+                    </h2>
+                    
+                    <p class="text-gray-400 mb-8 max-w-lg text-lg leading-relaxed">
+                        Bridging the gap between secure architecture and innovative web solutions. Focused on <span class="text-white">Full Stack Development</span> & <span class="text-white">Cybersecurity</span>.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="px-8 py-3 bg-white text-dark-bg font-bold rounded-lg hover:bg-gray-200 transition-all transform hover:-translate-y-1 shadow-lg shadow-white/10">
+                            View Projects
+                        </a>
+                        <a href="#contact" class="px-8 py-3 bg-transparent border border-gray-600 text-white font-medium rounded-lg hover:border-accent-primary hover:text-accent-primary transition-all">
+                            Contact Me
+                        </a>
+                    </div>
+
+                    <div class="flex gap-6 mt-12">
+                        <a href="https://github.com/Saggy2442" target="_blank" class="text-gray-400 hover:text-white transition-colors transform hover:scale-110">
+                            <i class="fab fa-github text-2xl"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/sagarpalhade2442" target="_blank" class="text-gray-400 hover:text-white transition-colors transform hover:scale-110">
+                            <i class="fab fa-linkedin text-2xl"></i>
+                        </a>
+                        <a href="mailto:sagarrajendrapalhade@gmail.com" class="text-gray-400 hover:text-white transition-colors transform hover:scale-110">
+                            <i class="fas fa-envelope text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Visual Element (Abstract Cyber Shape) -->
+                <div class="hidden lg:flex justify-center relative">
+                    <div class="absolute inset-0 bg-accent-primary/20 blur-[100px] rounded-full"></div>
+                    <div class="relative w-80 h-80 md:w-96 md:h-96 glass-card rounded-2xl flex items-center justify-center transform rotate-3 hover:rotate-0 transition-all duration-700 animate-float border border-white/10">
+                        <div class="absolute inset-0 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 rounded-2xl"></div>
+                        <div class="grid grid-cols-2 gap-4 p-6 w-full h-full opacity-80">
+                            <div class="bg-dark-bg/50 rounded-lg flex items-center justify-center border border-white/5">
+                                <i class="fas fa-code text-4xl text-accent-primary"></i>
+                            </div>
+                            <div class="bg-dark-bg/50 rounded-lg flex items-center justify-center border border-white/5">
+                                <i class="fas fa-shield-alt text-4xl text-accent-secondary"></i>
+                            </div>
+                            <div class="bg-dark-bg/50 rounded-lg flex items-center justify-center border border-white/5">
+                                <i class="fas fa-network-wired text-4xl text-purple-400"></i>
+                            </div>
+                            <div class="bg-dark-bg/50 rounded-lg flex items-center justify-center border border-white/5">
+                                <i class="fas fa-terminal text-4xl text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">About Me</h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-accent-primary to-accent-secondary mx-auto rounded-full"></div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                    <!-- Decorative glowing orbs -->
+                    <div class="absolute -top-20 -right-20 w-60 h-60 bg-accent-primary/10 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-accent-secondary/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                             <!-- Terminal-like snippet for the cyber feel, but subtle -->
+                            <div class="w-full md:w-1/3 shrink-0">
+                                <div class="bg-dark-bg rounded-lg p-4 border border-gray-700 font-mono text-xs md:text-sm shadow-xl">
+                                    <div class="flex space-x-2 mb-3">
+                                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <p class="text-green-400 mb-2">$ whoami</p>
+                                    <p class="text-gray-300 mb-2">> Sagar Palhade</p>
+                                    <p class="text-green-400 mb-2">$ current_status</p>
+                                    <p class="text-gray-300">> Engineering Student</p>
+                                    <p class="text-gray-300">> Security Researcher</p>
+                                    <p class="text-gray-300">> Full Stack Dev</p>
+                                </div>
+                            </div>
+
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-white mb-4">Engineering Secure Digital Experiences</h3>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    I am currently pursuing my BE in Computer Science at Shri Sant Gajanan Maharaj College Of Engineering. My passion lies at the intersection of <span class="text-accent-secondary font-semibold">building</span> and <span class="text-accent-primary font-semibold">protecting</span>.
+                                </p>
+                                <p class="text-gray-300 mb-6 leading-relaxed">
+                                    Whether it's developing full-stack applications with the MERN stack or hunting for vulnerabilities using Kali Linux tools, I aim to create robust software that stands up to modern security threats.
+                                </p>
+                                
+                                <div class="p-4 bg-white/5 rounded-lg border-l-4 border-accent-secondary">
+                                    <p class="text-sm text-gray-400 uppercase tracking-wider mb-1">Education</p>
+                                    <p class="text-white font-medium">BE in Computer Science & Engineering</p>
+                                    <p class="text-sm text-gray-400">CGPA: 7.82/10 • SSGMCE</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 bg-dark-bg relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Technical Arsenal</h2>
+                    <p class="text-gray-400">Tools and technologies I use to build and break.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Cybersecurity -->
+                    <div class="glass-card hover-card p-8 rounded-xl border border-gray-800">
+                        <div class="w-14 h-14 bg-accent-secondary/20 rounded-lg flex items-center justify-center mb-6 text-accent-secondary">
+                            <i class="fas fa-shield-virus text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4">Cybersecurity</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Wireshark</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Burp Suite</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Nmap</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Autopsy</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Kali Linux</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Nessus</span>
+                        </div>
+                    </div>
+
+                    <!-- Web Dev -->
+                    <div class="glass-card hover-card p-8 rounded-xl border border-gray-800">
+                        <div class="w-14 h-14 bg-accent-primary/20 rounded-lg flex items-center justify-center mb-6 text-accent-primary">
+                            <i class="fas fa-code text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4">Full Stack Dev</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">React.js</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Node.js</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Express</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">MongoDB</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Tailwind</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">REST API</span>
+                        </div>
+                    </div>
+
+                    <!-- Core -->
+                    <div class="glass-card hover-card p-8 rounded-xl border border-gray-800">
+                        <div class="w-14 h-14 bg-purple-500/20 rounded-lg flex items-center justify-center mb-6 text-purple-400">
+                            <i class="fas fa-server text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4">Core & Systems</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Python</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Java</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Git/GitHub</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Linux Admin</span>
+                            <span class="px-3 py-1 bg-dark-bg rounded text-sm text-gray-300 border border-gray-700">Networking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-24 relative overflow-hidden">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="flex items-center justify-between mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Experience</h2>
+                    <span class="text-accent-secondary font-mono text-sm border border-accent-secondary/30 px-3 py-1 rounded bg-accent-secondary/10">3 Internships</span>
+                </div>
+
+                <div class="relative timeline-line ml-4 md:ml-0 space-y-12">
+                    
+                    <!-- Item 1 -->
+                    <div class="relative pl-12 md:pl-0">
+                        <!-- Dot -->
+                        <div class="absolute left-[11px] top-1 w-4 h-4 rounded-full bg-accent-secondary border-4 border-dark-bg z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                        
+                        <div class="md:flex items-start justify-between group">
+                            <div class="md:w-1/3 mb-2 md:mb-0 md:pr-8 md:text-right">
+                                <span class="text-accent-secondary font-mono text-sm block mb-1">Aug 2025 - Ongoing</span>
+                                <h3 class="text-lg font-bold text-white">Freelance Developer</h3>
+                                <p class="text-gray-500 text-sm">Central Railway</p>
+                            </div>
+                            <div class="md:w-2/3 glass-card p-6 rounded-lg border-l-4 border-accent-secondary group-hover:bg-white/5 transition-colors">
+                                <h4 class="text-white font-bold mb-2">Central Railway Engineers Association Portal</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">
+                                    Digitized manual operations by developing a secure MERN stack web portal. Implemented JWT & OTP authentication for sensitive modules like membership management and staff transfers.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="relative pl-12 md:pl-0">
+                        <div class="absolute left-[11px] top-1 w-4 h-4 rounded-full bg-accent-primary border-4 border-dark-bg z-10"></div>
+                        
+                        <div class="md:flex items-start justify-between group">
+                            <div class="md:w-1/3 mb-2 md:mb-0 md:pr-8 md:text-right">
+                                <span class="text-accent-primary font-mono text-sm block mb-1">Sept 2025</span>
+                                <h3 class="text-lg font-bold text-white">Cyber Security Intern</h3>
+                                <p class="text-gray-500 text-sm">Threat Prism</p>
+                            </div>
+                            <div class="md:w-2/3 glass-card p-6 rounded-lg border-l-4 border-accent-primary group-hover:bg-white/5 transition-colors">
+                                <h4 class="text-white font-bold mb-2">Pentesting & Forensics</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">
+                                    Conducted Android app penetration testing using Burp Suite and Frida to identify OWASP vulnerabilities. Performed forensic disk analysis with Autopsy to recover data for investigations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="relative pl-12 md:pl-0">
+                        <div class="absolute left-[11px] top-1 w-4 h-4 rounded-full bg-purple-500 border-4 border-dark-bg z-10"></div>
+                        
+                        <div class="md:flex items-start justify-between group">
+                            <div class="md:w-1/3 mb-2 md:mb-0 md:pr-8 md:text-right">
+                                <span class="text-purple-400 font-mono text-sm block mb-1">Aug 2025</span>
+                                <h3 class="text-lg font-bold text-white">Web Dev Intern</h3>
+                                <p class="text-gray-500 text-sm">ApexaiQ</p>
+                            </div>
+                            <div class="md:w-2/3 glass-card p-6 rounded-lg border-l-4 border-purple-500 group-hover:bg-white/5 transition-colors">
+                                <h4 class="text-white font-bold mb-2">Full Stack Development</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">
+                                    Built and deployed full-stack web components using Node.js, Express, and MongoDB. Gained professional experience in scalable web architecture.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 bg-dark-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Featured Projects</h2>
+                    <p class="text-gray-400">A selection of my work in security and development.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Project 1 -->
+                    <a href="https://www.ssgmce.ac.in/vihang/" target="_blank" class="glass-card rounded-xl overflow-hidden group hover-card block">
+                        <div class="h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">Vihang Drone Club</h3>
+                                <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                                Official website for the college drone club. Designed a user-friendly interface using Bootstrap and hosted on the college portal. Copyright secured for personal contribution.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-blue-500/10 text-blue-400 rounded text-xs">HTML/CSS</span>
+                                <span class="px-2 py-1 bg-blue-500/10 text-blue-400 rounded text-xs">Bootstrap</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Project 2 -->
+                    <a href="Android App Pentesting Report.pdf" target="_blank" class="glass-card rounded-xl overflow-hidden group hover-card block">
+                        <div class="h-2 bg-gradient-to-r from-red-500 to-orange-500"></div>
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">Android App Pentesting</h3>
+                                <i class="fas fa-bug text-gray-500 group-hover:text-red-400 transition-colors"></i>
+                            </div>
+                            <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                                Security analysis of an Android banking application. Identified major weaknesses using Frida and Burp Suite, creating a comprehensive vulnerability report.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-red-500/10 text-red-400 rounded text-xs">Burp Suite</span>
+                                <span class="px-2 py-1 bg-red-500/10 text-red-400 rounded text-xs">Frida</span>
+                                <span class="px-2 py-1 bg-red-500/10 text-red-400 rounded text-xs">OWASP</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Project 3 -->
+                    <a href="Digital Forensic Analysis Report.pdf" target="_blank" class="glass-card rounded-xl overflow-hidden group hover-card block">
+                        <div class="h-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">Digital Forensics</h3>
+                                <i class="fas fa-search text-gray-500 group-hover:text-purple-400 transition-colors"></i>
+                            </div>
+                            <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                                Deep dive investigation on disk images. Recovered deleted files, analyzed browser history artifacts, and reconstructed user activity timelines for TryHackMe cases.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-purple-500/10 text-purple-400 rounded text-xs">Autopsy</span>
+                                <span class="px-2 py-1 bg-purple-500/10 text-purple-400 rounded text-xs">Disk Analysis</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Project 4 -->
+                    <a href="https://github.com/Saggy2442/Phishing-Link-Scanner" target="_blank" class="glass-card rounded-xl overflow-hidden group hover-card block">
+                        <div class="h-2 bg-gradient-to-r from-yellow-500 to-green-500"></div>
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">Phishing Link Scanner</h3>
+                                <i class="fas fa-user-secret text-gray-500 group-hover:text-yellow-400 transition-colors"></i>
+                            </div>
+                            <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                                Python tool detecting potential phishing URLs. Uses Levenshtein distance algorithms to compare domains against a legitimate whitelist to flag spoofing attempts.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded text-xs">Python</span>
+                                <span class="px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded text-xs">Algorithms</span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact" class="py-12 border-t border-gray-800 bg-black/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-2xl font-bold text-white mb-6">Let's Connect</h2>
+                <p class="text-gray-400 mb-8 max-w-xl mx-auto">
+                    I'm always interested in new projects, security challenges, or full-time opportunities.
+                </p>
+                
+                <div class="flex justify-center gap-8 mb-8">
+                    <a href="mailto:sagarrajendrapalhade@gmail.com" class="text-gray-400 hover:text-accent-primary transition-colors flex items-center">
+                        <i class="fas fa-envelope mr-2"></i> Email Me
+                    </a>
+                    <a href="https://linkedin.com/in/sagarpalhade2442" class="text-gray-400 hover:text-accent-primary transition-colors flex items-center">
+                        <i class="fab fa-linkedin mr-2"></i> LinkedIn
+                    </a>
+                    <a href="https://github.com/Saggy2442" class="text-gray-400 hover:text-accent-primary transition-colors flex items-center">
+                        <i class="fab fa-github mr-2"></i> GitHub
+                    </a>
+                </div>
+
+                <p class="text-gray-600 text-sm">
+                    &copy; 2025 Sagar Palhade. Built with secure code.
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-accent-primary text-white p-3 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none z-50">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // --- Network Background Animation ---
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        // Configuration
+        const particleCount = 60; // Fewer particles for cleaner look
+        const connectionDistance = 150;
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; // Slow movement
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#0ea5e9' : '#10b981'; // Blue or Green dots
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Update and draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / connectionDistance)})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+        
+        resize();
+        initParticles();
+        animate();
+
+        // --- Typing Effect ---
+        const typingText = document.getElementById('typing-text');
+        const roles = ['Secure Web Apps', 'Digital Fortresses', 'Resilient Systems'];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function typeRole() {
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                typingText.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingText.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            if (!isDeleting && charIndex === currentRole.length) {
+                isDeleting = true;
+                setTimeout(typeRole, 2000); // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(typeRole, 500); // Pause before next
+            } else {
+                setTimeout(typeRole, isDeleting ? 50 : 100);
+            }
+        }
+        
+        typeRole();
+
+        // --- Navbar Scroll Effect ---
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg');
+                nav.style.background = 'rgba(11, 17, 32, 0.95)';
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.style.background = 'rgba(11, 17, 32, 0.85)';
+            }
+        });
+
+        // --- Mobile Menu ---
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Back to Top ---
+        const backToTopBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+    </script>
+</body>
+</html>
